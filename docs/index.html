@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algoritmo Knn</title>
+  </head>
+  <body></body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css"
+      integrity="undefined"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">Algoritmo KNN</span>
+      <form>
+                Colorear por:
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="regRad"
+              value="regopt"
+              onchange="loadData()"
+              checked
+            />
+            <label class="form-check-label" for="regRad">Region</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="prorad"
+              value="proopt"
+              onchange="loadData()"
+            />
+            <label class="form-check-label" for="prorad">Provincia</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="disrad"
+              value="disopt"
+              onchange="loadData()"
+            />
+            <label class="form-check-label" for="disrad">Distrito</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="catrad"
+              value="catopt"
+              onchange="loadData()"
+            />
+            <label class="form-check-label" for="catrad">Categoria</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="tctrad"
+              value="tctopt"
+              onchange="loadData()"
+            />
+            <label class="form-check-label" for="tctrad"
+              >Tipo de categoria</label
+            >
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="sctrad"
+              value="sctopt"
+              onchange="loadData()"
+            />
+            <label class="form-check-label" for="sctrad">Subcategoria</label>
+          </div>
+        </div>
+      </form>
+      <form class="form-inline my-2 my-lg-0" id="form">
+        
+        <label for="formControlRange" class="form-label">K:</label>
+        <input
+          type="range"
+          class="form-control-range"
+          id="formControlRange"
+          min="3"
+          max="100"
+          step="1"
+          onInput="$('#rangeval').html($(this).val())"
+        />
+        <span id="rangeval">52</span>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Predecir
+        </button>
+      </form>
+      
+    </nav>
+    <div
+      class="container-fluid p-0"
+      style="overflow-x: scroll; overflow-y: hidden; overflow-x: hidden; height: 92vh"
+    >
+      <div class="row no-gutters">
+        <div class="col" style="white-space: pre-line; overflow: auto; max-height: 92vh;">
+          <table class="table table-bordered"
+            id="jsontable" style="white-space: pre-line;"
+          >
+        </table>
+        </div>
+        <div class="col" style="height: 92vh; padding: 0px;">
+          <div id="mapid" style="height: 92vh; padding: 0px;"></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      var mymap;
+      var myRenderer;
+      var datalistar = null;
+      var datapredecir = null;
+      var k =-1;
+      var flagPredecir = false;
+      loadData();
+
+      $("#form").submit(function (e) {
+        e.preventDefault();
+        clickPredecir();
+        return false;
+      });
+      function loadData(){
+        if(flagPredecir){
+          clickPredecir();
+          return;
+        }
+        if(mymap){
+          mymap.remove();
+        }
+        mymap = L.map("mapid").setView([-12.04318, -77.02824], 5);
+        myRenderer = L.canvas({ padding: 0.5 });
+        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+          maxZoom: 18,
+        }).addTo(mymap);
+        if (datalistar === null) {
+          fetchDataToTable();
+        } else {
+          pintar();
+        }
+      }
+      function clickPredecir(){
+        flagPredecir = true;
+        console.log('Prediciendo!');
+        if(mymap){
+          mymap.remove();
+        }
+        mymap = L.map("mapid").setView([-12.04318, -77.02824], 5);
+        myRenderer = L.canvas({ padding: 0.5 });
+        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+          'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+          maxZoom: 18,
+        }).addTo(mymap);
+        var aux = parseInt(document.getElementById("formControlRange").value);
+        if (datapredecir === null && k !== aux) {
+          k=aux;
+          predecir();
+        } else {
+          pintarpredecir();
+        }
+      }
+
+      function pintar(){
+        let body = datalistar;
+        document.getElementById('jsontable').innerHTML = "";
+            console.log("parsing data...");
+            let keys = Object.keys(body[0]);
+            let colorkey = "REGIÓN"; //de fabrica se pinta por region
+            if (document.getElementById("regRad").checked === true) {
+              colorkey = "REGIÓN";
+            }
+            if (document.getElementById("prorad").checked === true) {
+              colorkey = "PROVINCIA";
+            }
+            if (document.getElementById("disrad").checked === true) {
+              colorkey = "DISTRITO";
+            }
+            if (document.getElementById("catrad").checked === true) {
+              colorkey = "CATEGORIA";
+            }
+            if (document.getElementById("tctrad").checked === true) {
+              colorkey = "Tipo_de_Categoria";
+            }
+            if (document.getElementById("sctrad").checked === true) {
+              colorkey = "Sub_tipo_Categoria";
+            }
+            var tr = document.createElement('tr');
+            keys.forEach((key)=>{
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(key));
+                tr.appendChild(th);
+            });
+            jsontable.appendChild(tr);
+            body.forEach((element) => {
+              if (
+                element[keys[keys.length - 1]] != null &&
+                element[keys[keys.length - 2]] != null
+              ) {
+                var coloraux = getColorByKey(element[colorkey]);
+                L.circleMarker(
+                  [
+                    element[keys[keys.length - 1]],
+                    element[keys[keys.length - 2]],
+                  ],
+                  {
+                    renderer: myRenderer,
+                    color: "#" + coloraux,
+                  }
+                )
+                  .addTo(mymap)
+                  .bindPopup(
+                    colorkey+": "+ element[colorkey].toString()+" Codigo: "+element['Codigo_del_Recurso']
+                  ).on('click',function (e){
+                    clickZoom(e);
+                    scrollToId(element['Codigo_del_Recurso']);
+                  });
+                  var tr = document.createElement('tr');
+                  tr.setAttribute("id",element['Codigo_del_Recurso']);
+                  keys.forEach((key) => {
+                      var td = document.createElement('td');
+                      if(key === colorkey)
+                      td.setAttribute("style", "background-color: #"+coloraux);
+                      td.appendChild(document.createTextNode(element[key]));
+                      tr.appendChild(td);
+                    });
+                  jsontable.appendChild(tr);
+              }
+            });
+            console.log("done parsing");
+      }
+      function pintarpredecir(){
+        let body = datapredecir;
+        document.getElementById('jsontable').innerHTML = "";
+        jsontable.innerHTML
+            console.log("parsing data...");
+            let keys = Object.keys(body[0]);
+            let keysRecurso = Object.keys(body[0]['Recurso']);
+            let colorkey = "REGIÓN_predict"; //de fabrica se pinta por region
+            if (document.getElementById("regRad").checked === true) {
+              colorkey = "REGIÓN_predict";
+            }
+            if (document.getElementById("prorad").checked === true) {
+              colorkey = "PROVINCIA_predict";
+            }
+            if (document.getElementById("disrad").checked === true) {
+              colorkey = "DISTRITO_predict";
+            }
+            if (document.getElementById("catrad").checked === true) {
+              colorkey = "CATEGORIA_predict";
+            }
+            if (document.getElementById("tctrad").checked === true) {
+              colorkey = "Tipo_de_Categoria_predict";
+            }
+            if (document.getElementById("sctrad").checked === true) {
+              colorkey = "Sub_tipo_Categoria_predict";
+            }
+            var tr = document.createElement('tr');
+            keys.forEach((key)=>{
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(key));
+                tr.appendChild(th);
+            });
+            jsontable.appendChild(tr);
+            body.forEach((element) => {
+              if (
+                element['Recurso']['LATITUD'] != null &&
+                element['Recurso']['LONGITUD'] != null
+              ) {
+                var coloraux = getColorByKey(element[colorkey]);
+                L.circleMarker(
+                  [
+                    element['Recurso']['LONGITUD'],
+                    element['Recurso']['LATITUD'],
+                  ],
+                  {
+                    renderer: myRenderer,
+                    color: "#" + coloraux,
+                  }
+                )
+                  .addTo(mymap)
+                  .bindPopup(
+                    colorkey+": "+ element[colorkey].toString()+'\r\t'+"Codigo: "+element['Recurso']['Codigo_del_Recurso']
+                  ).on('click',function (e){
+                    clickZoom(e);
+                    scrollToId(element['Recurso']['Codigo_del_Recurso']);
+                  });
+                  var tr = document.createElement('tr');
+                  tr.setAttribute("id",element['Recurso']['Codigo_del_Recurso']);
+                  var td = document.createElement('td');
+                  var aux = "";
+                  keysRecurso.forEach((key) => {
+                    aux+=key+": "+element['Recurso'][key]+'\n';
+                  });
+                  td.appendChild(document.createTextNode(aux));
+                  tr.appendChild(td);
+                  keys.forEach((key) => {
+                    if(key!=='Recurso'){
+                      var td = document.createElement('td');
+                      if(key === colorkey)
+                      td.setAttribute("style", "background-color: #"+coloraux);
+                      td.appendChild(document.createTextNode(element[key]));
+                      tr.appendChild(td);
+                    }
+                    });
+                  jsontable.appendChild(tr);
+              }
+            });
+            console.log("done parsing");
+      }
+      function predecir() {
+        document.getElementById('jsontable').innerHTML = "";
+        //Para sacarlo de github:
+        fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/responseK"+k+".json")
+        //Para sacarlo de archivo local
+        //fetch("../responses/responseK"+k+".json")
+        //Para sacarlo de conexion local
+        //fetch("http:/localhost.com/knn?k="+k)
+          .then((response) => {
+            console.log("response reached!");
+            return response.json();
+          })
+          .then((body) => {
+            datapredecir = body;
+            console.log("parsing data...");
+            let keys = Object.keys(body[0]);
+            let keysRecurso = Object.keys(body[0]['Recurso']);
+            let colorkey = "REGIÓN_predict"; //de fabrica se pinta por region
+            if (document.getElementById("regRad").value === true) {
+              colorkey = "REGIÓN_predict";
+            }
+            if (document.getElementById("prorad").value === true) {
+              colorkey = "PROVINCIA_predict";
+            }
+            if (document.getElementById("disrad").value === true) {
+              colorkey = "DISTRITO_predict";
+            }
+            if (document.getElementById("catrad").value === true) {
+              colorkey = "Codigo_del_Recurso_predict";
+            }
+            if (document.getElementById("tctrad").value === true) {
+              colorkey = "Tipo_de_Categoria_predict";
+            }
+            if (document.getElementById("sctrad").value === true) {
+              colorkey = "Sub_tipo_Categoria_predict";
+            }
+            var tr = document.createElement('tr');
+            keys.forEach((key)=>{
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(key));
+                tr.appendChild(th);
+            });
+            jsontable.appendChild(tr);
+            body.forEach((element) => {
+              if (
+                element['Recurso']['LATITUD'] != null &&
+                element['Recurso']['LONGITUD'] != null
+              ) {
+                var coloraux = getColorByKey(element[colorkey]);
+                L.circleMarker(
+                  [
+                    element['Recurso']['LONGITUD'],
+                    element['Recurso']['LATITUD'],
+                  ],
+                  {
+                    renderer: myRenderer,
+                    color: "#" + coloraux,
+                  }
+                )
+                  .addTo(mymap)
+                  .bindPopup(
+                    colorkey+": "+ element[colorkey].toString()+" Codigo: "+element['Recurso']['Codigo_del_Recurso']
+                  ).on('click',function (e){
+                    clickZoom(e);
+                    scrollToId(element['Recurso']['Codigo_del_Recurso']);
+                  });
+                  var tr = document.createElement('tr');
+                  tr.setAttribute("id",element['Recurso']['Codigo_del_Recurso']);
+                  var td = document.createElement('td');
+                  var aux = "";
+                  keysRecurso.forEach((key) => {
+                    aux+=key+": "+element['Recurso'][key]+'\n';
+                  });
+                  td.appendChild(document.createTextNode(aux));
+                  tr.appendChild(td);
+                  keys.forEach((key) => {
+                    if(key!=='Recurso'){
+                      var td = document.createElement('td');
+                      if(key === colorkey)
+                      td.setAttribute("style", "background-color: #"+coloraux);
+                      td.appendChild(document.createTextNode(element[key]));
+                      tr.appendChild(td);
+                    }
+                    });
+                  jsontable.appendChild(tr);
+              }
+            });
+            console.log("done parsing");
+          });
+      }
+
+      function fetchDataToTable() {
+        //Para sacarlo de github:
+        fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/listar.json")
+        //Para sacarlo de archivo local
+        //fetch("../responses/listar.json")
+        //Para sacarlo de conexion local
+        //fetch("http:/localhost.com/listar")
+          .then((response) => {
+            console.log("response reached!");
+            return response.json();
+          })
+          .then((body) => {
+            datalistar = body;
+            console.log("parsing data...");
+            let keys = Object.keys(body[0]);
+            let colorkey = "REGIÓN"; //de fabrica se pinta por region
+            if (document.getElementById("regRad").value === true) {
+              colorkey = "REGIÓN";
+            }
+            if (document.getElementById("prorad").value === true) {
+              colorkey = "PROVINCIA";
+            }
+            if (document.getElementById("disrad").value === true) {
+              colorkey = "DISTRITO";
+            }
+            if (document.getElementById("catrad").value === true) {
+              colorkey = "Codigo_del_Recurso";
+            }
+            if (document.getElementById("tctrad").value === true) {
+              colorkey = "Tipo_de_Categoria";
+            }
+            if (document.getElementById("sctrad").value === true) {
+              colorkey = "Sub_tipo_Categoria";
+            }
+            var tr = document.createElement('tr');
+            keys.forEach((key)=>{
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(key));
+                tr.appendChild(th);
+            });
+            jsontable.appendChild(tr);
+            body.forEach((element) => {
+              if (
+                element[keys[keys.length - 1]] != null &&
+                element[keys[keys.length - 2]] != null
+              ) {
+                var coloraux = getColorByKey(element[colorkey]);
+                L.circleMarker(
+                  [
+                    element[keys[keys.length - 1]],
+                    element[keys[keys.length - 2]],
+                  ],
+                  {
+                    renderer: myRenderer,
+                    color: "#" + coloraux,
+                  }
+                )
+                  .addTo(mymap)
+                  .bindPopup(
+                    colorkey+": "+ element[colorkey].toString()+'\n'+"Codigo: "+element['Codigo_del_Recurso']
+                  ).on('click',function (e){
+                    clickZoom(e);
+                    scrollToId(element['Codigo_del_Recurso']);
+                  });
+                  var tr = document.createElement('tr');
+                  tr.setAttribute("id",element['Codigo_del_Recurso']);
+                  keys.forEach((key) => {
+                      var td = document.createElement('td');
+                      if(key === colorkey)
+                      td.setAttribute("style", "background-color: #"+coloraux);
+                      td.appendChild(document.createTextNode(element[key]));
+                      tr.appendChild(td);
+                    });
+                  jsontable.appendChild(tr);
+              }
+            });
+            console.log("done parsing");
+          });
+      }
+
+      function scrollToId(id){
+        document.getElementById(id.toString()).scrollIntoView();
+      }
+      function clickZoom(e){
+        mymap.setView(e.target.getLatLng(),13);
+      }
+      function elementToString(element, keys) {
+        var aux = "";
+        keys.forEach((key) => {
+          aux += key + ": " + element[key] + "\r\n";
+        });
+        return aux;
+      }
+
+      function getColorByKey(aux) {
+        var sum = 0;
+        for (let i = 0; i < aux.length; i++) {
+          sum += aux.charCodeAt(i) * 5; //*5 para mas variedad de colores
+        }
+        color = sum.toString(16).toUpperCase();
+        //doblamos los digitos para pasarlo de 3 digitos a 6 digitos:
+        color = color
+          .split("")
+          .map(function (hex) {
+            return hex + hex;
+          })
+          .join("");
+        return color;
+      }
+    </script>
+  </body>
+</html>
+
