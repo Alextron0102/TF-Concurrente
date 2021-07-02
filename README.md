@@ -2,9 +2,9 @@
 #### SECCIÓN: SW72
 
 ##### INTEGRANTES:
-Alexis Enrique Barrios Pérez U20181A146
-Geral Esteen Castillo Arredondo U201716913
-Alex Daniel Juep Sifuentes U201718083 
+- Alexis Enrique Barrios Pérez U20181A146
+- Geral Esteen Castillo Arredondo U201716913
+- Alex Daniel Juep Sifuentes U201718083 
 
 ##### PROFESOR:
 Carlos Alberto Jara García
