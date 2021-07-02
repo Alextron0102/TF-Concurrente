@@ -92,10 +92,6 @@ func readnodos(res http.ResponseWriter, req *http.Request) {
 func nodoknnthread(i int, k string, recursos []cl.Recurso, chann chan []cl.RecursoKnn) {
 	jsonBytes, _ := json.MarshalIndent(recursos, "", " ")
 	resp, err := http.Post(direccionnodos[i]+"/knn?k="+k, "application/json", bytes.NewBuffer(jsonBytes))
-	// req, _ := http.NewRequest("POST", direccionnodos[i]+"/knn?"+k, bytes.NewBuffer(jsonBytes))
-	// req.Header.Set("Content-Type", "application/json")
-	// client := &http.Client{}
-	//resp, err := client.Do(req)
 	if err != nil {
 		panic(err)
 	}
@@ -103,13 +99,6 @@ func nodoknnthread(i int, k string, recursos []cl.Recurso, chann chan []cl.Recur
 	var recursosPredict []cl.RecursoKnn
 	json.NewDecoder(resp.Body).Decode(&recursosPredict)
 	log.Print(recursosPredict)
-	// var j interface{}
-	// aux := json.NewDecoder(resp.Body).Decode(&j)
-	// if aux != nil {
-	// 	panic(aux)
-	// }
-	// fmt.Printf("%s", j)
-	// str := fmt.Sprintf("%v", j)
 	chann <- recursosPredict
 }
 func knnEnpoint(res http.ResponseWriter, req *http.Request) {
