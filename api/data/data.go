@@ -1,8 +1,6 @@
 package data
 
-import (
-	"runtime"
-)
+import "runtime"
 
 var Recursos []Recurso
 var Regiones, Provincias, Distritos, Categorias, Tipo_categorias, Sub_tipo_categorias []string
@@ -31,4 +29,4 @@ type RecursoKnn struct {
 	Sub_tipo_Categoria_predict string
 }
 
-var NUM_CPU = runtime.NumCPU()-1
+var NUM_CPU = runtime.NumCPU() - 1

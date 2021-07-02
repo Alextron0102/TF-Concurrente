@@ -373,11 +373,11 @@
       function predecir() {
         document.getElementById('jsontable').innerHTML = "";
         //Para sacarlo de github:
-        fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/responseK"+k+".json")
+        //fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/responseK"+k+".json")
         //Para sacarlo de archivo local
         //fetch("../responses/responseK"+k+".json")
         //Para sacarlo de conexion local
-        //fetch("http:/localhost.com/knn?k="+k)
+        fetch("http://localhost/knn?k="+k)
           .then((response) => {
             console.log("response reached!");
             return response.json();
@@ -463,11 +463,11 @@
 
       function fetchDataToTable() {
         //Para sacarlo de github:
-        fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/listar.json")
+        //fetch("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/responses/listar.json")
         //Para sacarlo de archivo local
         //fetch("../responses/listar.json")
         //Para sacarlo de conexion local
-        //fetch("http:/localhost.com/listar")
+        fetch("http://localhost/listar")
           .then((response) => {
             console.log("response reached!");
             return response.json();

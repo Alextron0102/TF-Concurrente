@@ -5,7 +5,7 @@ package reader
 
 import (
 	//"bufio"
-	cl "TA2-GO-API/data"
+	cl "api/data"
 	"encoding/csv"
 	"fmt"
 	"log"

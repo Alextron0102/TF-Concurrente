@@ -1,8 +1,8 @@
 package knn
 
 import (
-	cl "TA2-GO-API/data"
 	"math"
+	cl "nodo/data"
 )
 
 type DistanciaSt struct {
@@ -86,16 +86,16 @@ func predictRecurso(origen cl.Recurso, k int, recursoKnn chan cl.RecursoKnn) {
 //hallamos las distancias de 1 punto a todos (todos con todos)
 //para cada punto de sus distancias solo agarra los k mas cercanos
 //de los cercanos hallamos sus respectivas categorias
-func Knn(k int) []cl.RecursoKnn {
+func Knn(k int, recursos []cl.Recurso) []cl.RecursoKnn {
 	if k > len(cl.Recursos) {
 		k = len(cl.Recursos)
 	}
 	channel := make(chan cl.RecursoKnn)
 	//creamos canales para llenar la matriz
 	cant := 0
-	for i := 0; i < len(cl.Recursos); i++ {
-		if cl.Recursos[i].LATITUD != nil && cl.Recursos[i].LONGITUD != nil {
-			go predictRecurso(cl.Recursos[i], k, channel)
+	for i := 0; i < len(recursos); i++ {
+		if recursos[i].LATITUD != nil && recursos[i].LONGITUD != nil {
+			go predictRecurso(recursos[i], k, channel)
 			cant++
 		}
 	}
