@@ -1,8 +1,6 @@
 package data
 
-import (
-	"runtime"
-)
+import "runtime"
 
 var Recursos []Recurso
 var Regiones, Provincias, Distritos, Categorias, Tipo_categorias, Sub_tipo_categorias []string

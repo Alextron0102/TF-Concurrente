@@ -163,5 +163,9 @@ func main() {
 			direccionnodos = append(direccionnodos, aux)
 		}
 	}
+	log.Println("Nodos:")
+	for _, dir := range direccionnodos {
+		log.Println(dir)
+	}
 	handleRequest()
 }

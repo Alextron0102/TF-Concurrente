@@ -83,7 +83,12 @@ func LoadRecursos() []cl.Recurso {
 	data, err := readCSVFromUrl("https://raw.githubusercontent.com/Alextron0102/TA2-Go-API/main/files/Inventario_recursos_turisticos.csv")
 	check(err)
 	channels := make([]chan cl.Recurso, cl.NUM_CPU+1)
-	limit := len(data) / cl.NUM_CPU
+	var limit int
+	if cl.NUM_CPU == 0 {
+		limit = len(data)
+	} else {
+		limit = len(data) / (cl.NUM_CPU)
+	}
 	fmt.Print("lineas en total: ")
 	fmt.Println(len(data))
 	iteratoraux := 0
